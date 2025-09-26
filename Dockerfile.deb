@@ -1,0 +1,29 @@
+FROM python:3-slim-trixie
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Clone the repository at build time
+RUN git clone --depth 1 https://github.com/jelte1/SpotiFLAC-CLI . \
+    && pip install --no-cache-dir \
+    requests \
+    beautifulsoup4 \
+    mutagen \
+    tqdm \
+    colorama \
+    spotipy \
+    yt-dlp \
+    pyotp
+
+
+# Copy entrypoint script
+COPY entrypoint-deb.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Set entrypoint
+ENTRYPOINT ["/entrypoint.sh"]

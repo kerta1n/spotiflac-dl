@@ -1,0 +1,25 @@
+services:
+  spotiflac:
+    image: kertain/spotiflac-dl:3830c96
+    container_name: spotiflac-dl
+    environment:
+      # Semicolon-separated list of playlist URLs (singular playlist also works)
+      PLAYLIST_URLS: "https://open.spotify.com/playlist/1OfDFDJT4UPKN5iSccITWV?si=ab1c767dfcb943e1;https://open.spotify.com/playlist/37i9dQZF1DX4dyzvuaRJ0n?si=5960d5da77004d6a"
+
+      # All SpotiFLAC flags including output directory
+      # Example: "--service tidal --use-track-numbers --filename-format artist_title /downloads"
+      SPOTIFLAC_FLAGS: "/mnt/dl --service deezer --filename-format artist_title" #--use-artist-subfolders --use-album-subfolders
+
+      # Cooldown between playlists in seconds (avoids getting blocked by CDNs)
+      COOLDOWN_SECONDS: 30
+
+    volumes:
+      # Mount host directory for downloads
+      - /mnt/hdd/spotiflac-dl:/mnt/dl:rw
+
+    # Optional: Resource limits
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 512M
+    #       cpus: '0.5'
